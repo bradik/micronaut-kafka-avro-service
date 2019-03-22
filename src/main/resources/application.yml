@@ -1,0 +1,32 @@
+---
+micronaut:
+  application:
+    name: my-kafka-service
+  executors:
+    io:
+      type: fixed
+      nThreads: ${EXECUTERS_POOL}
+
+---
+kafka:
+  bootstrap:
+    servers: ${KAFKA_BOOTSTRAPSERVER}
+  schema:
+    registry:
+      url: ${SCHEMA_REGISTRY_URL}
+
+  consumers:
+    topic-in: ${TOPIC_IN}
+    default:
+      key:
+        deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value:
+        deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+
+  producers:
+    default:
+      key:
+        serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value:
+        serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+

@@ -1,0 +1,138 @@
+group = groupId
+version = groupVersion
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply plugin: 'idea'
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "org.springframework.boot"
+apply plugin: "net.ltgt.apt-idea"
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  maven { url "https://nexus.devsun.ru/repository/snapshots/devsun/" }
+  maven { url "https://nexus.devsun.ru/repository/devsun/" }
+  maven { url "http://packages.confluent.io/maven/" }
+}
+
+buildscript {
+  repositories {
+    mavenCentral()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+    mavenLocal()
+  }
+  dependencies {
+    classpath "com.github.jengelman.gradle.plugins:shadow:2.0.2"
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.15"
+  }
+}
+
+jar.enabled = false
+
+configurations.all {
+  // check for updates every build
+  resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+shadowJar {
+  mergeServiceFiles()
+  manifest {
+    attributes 'Main-Class': "my.kafka.service.Application"
+  }
+  classifier = null
+  configurations = [project.configurations.compile]
+}
+
+dependencies {
+  annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"
+
+  compile "io.micronaut:micronaut-runtime:${micronautVersion}"
+  compile "io.micronaut:micronaut-http-server-netty:${micronautVersion}"
+
+  compile "io.micronaut.configuration:micronaut-kafka:${micronautVersion}"
+
+  compile "io.micronaut:micronaut-inject:${micronautVersion}"
+  compile "io.micronaut:micronaut-validation:${micronautVersion}"
+  compile "io.micronaut:micronaut-runtime:${micronautVersion}"
+  compile "io.micronaut:micronaut-http-client:${micronautVersion}"
+  compile "io.micronaut:micronaut-http-server-netty:${micronautVersion}"
+  compile "io.micronaut:micronaut-inject-java:${micronautVersion}"
+
+  compile "com.fasterxml.jackson.core:jackson-databind:2.9.6"
+  compile "com.fasterxml.jackson.core:jackson-core:2.9.6"
+  compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.6"
+  compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.6"
+  compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.6"
+  compile "com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.6"
+  compile "ch.qos.logback:logback-classic:1.2.3"
+  compile "com.nimbusds:nimbus-jose-jwt:6.0.2"
+  compile "com.fasterxml.jackson.core:jackson-databind:2.9.6"
+
+
+  compile("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
+  compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+
+  compile "ch.qos.logback:logback-classic:1.2.3"
+
+  //compile "org.apache.avro:avro:1.8.2"
+  compile "io.confluent:kafka-avro-serializer:5.1.2"
+
+  compile "com.google.guava:guava:20.0"
+
+  testCompile "io.micronaut:micronaut-inject-java:${micronautVersion}"
+  testCompile "io.micronaut:micronaut-inject:${micronautVersion}"
+  testCompile "io.micronaut:micronaut-inject-java:${micronautVersion}"
+
+  testCompile 'org.apache.kafka:kafka-clients:2.0.0:test'
+  testCompile 'org.apache.kafka:kafka_2.12:2.0.0'
+  testCompile 'org.apache.kafka:kafka_2.12:2.0.0:test'
+
+  testCompile "junit:junit:4.12"
+  testImplementation('org.junit.jupiter:junit-jupiter-api:5.2.0')
+  testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.2.0',
+      'org.junit.vintage:junit-vintage-engine:5.2.0')
+
+  testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
+  testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.2.0'
+  testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.18.3'
+  testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.1.0'
+
+  testCompile "io.micronaut:micronaut-http-client:${micronautVersion}"
+
+  testCompile "org.json:json:20180813"
+  testCompile "org.fluttercode.datafactory:datafactory:0.8"
+}
+
+artifacts {
+  archives shadowJar
+}
+
+test {
+  useJUnitPlatform()
+}
+
+bootRun {
+  environment "MICRONAUT_SERVER_PORT", "8080"
+  environment "EXECUTERS_POOL", "50"
+
+  environment "KAFKA_BOOTSTRAPSERVER", "192.168.99.100:9092"
+  environment "SCHEMA_REGISTRY_URL", "192.168.99.100:8081"
+  environment "TOPIC_IN", "kafka.topic"
+}
+
+test {
+  environment "MICRONAUT_SERVER_PORT", "8080"
+  environment "EXECUTERS_POOL", "50"
+
+  environment "KAFKA_BOOTSTRAPSERVER", "192.168.99.100:9092"
+  environment "SCHEMA_REGISTRY_URL", "http://192.168.99.100:8081"
+  environment "TOPIC_IN", "kafka.topic"
+}
+

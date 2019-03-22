@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "Message",
+  "namespace": "my.kafka.service.schema",
+  "fields": [
+    {"name": "id", "type": "string"},
+    {"name": "traceId", "type": "string"},
+    {"name": "sendDate", "type": "string"},
+    {"name": "message", "type": "string"}
+  ]
+}
