@@ -1,5 +1,6 @@
 package my.kafka.service.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.avro.generic.IndexedRecord;
 
 import java.util.Date;
@@ -14,6 +15,7 @@ public class Message {
   // трассировочный id
   private UUID traceId = UUID.randomUUID();
   // дата отправки
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS Z")
   private Date sendDate = new Date();
   // текст ошибки, если такова была
   private String message;

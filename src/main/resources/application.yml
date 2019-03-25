@@ -6,7 +6,14 @@ micronaut:
     io:
       type: fixed
       nThreads: ${EXECUTERS_POOL}
-
+---
+jackson:
+  serialization:
+    indentOutput: true
+    writeDatesAsTimestamps: false
+  deserialization:
+    useBigIntegerForInts: true
+    failOnUnknownProperties: false
 ---
 kafka:
   bootstrap:

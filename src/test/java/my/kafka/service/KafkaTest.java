@@ -3,7 +3,9 @@ package my.kafka.service;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.runtime.Micronaut;
 import my.kafka.service.config.ConsumersConfig;
+import my.kafka.service.converter.BaseConverter;
 import my.kafka.service.converter.Converter;
+import my.kafka.service.converter.MessageSimpleConverter;
 import my.kafka.service.converter.MesssageConverter;
 import my.kafka.service.kafka.CommonProducer;
 import my.kafka.service.model.*;
@@ -42,8 +44,7 @@ class KafkaTest {
 
     CommonProducer producer = ctx.getBean(CommonProducer.class);
     ConsumersConfig config = ctx.getBean(ConsumersConfig.class);
-    UserToGenericRecordMapper mapper = ctx.getBean(UserToGenericRecordMapper.class);
-    Converter<Message> converter = ctx.getBean(MesssageConverter.class);
+    Converter<Message> converter = ctx.getBean(Converter.class);
 
 
     String topic = config.getTopicIn();
